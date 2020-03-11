@@ -6,9 +6,9 @@ module.exports = appInfo => {
   // 随机修改任意一个值即可
   config.keys = appInfo.name + '_1547540555445_5889';
   // 签名密匙妥善保管，不可泄露，务必修改
-  config.secretkey = '888999';
+  config.secretkey = '123456';
   // 绑定的域名， 务必修改
-  config.domain = 'http://127.0.0.1:7001'; // 请指定协议
+  config.domain = 'http://47.244.9.93:7001'; // 请指定协议
   // 支付宝userid pc登录 https://my.alipay.com/portal/i.htm 右键查看网页源代码搜索 userId 得到的值 和支付宝收款用户绑定
   config.alipayUserId = '2088702236650838';
   config.payMax = { // 设置随机立减金额，单位为0.01
