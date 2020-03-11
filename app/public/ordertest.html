@@ -1,164 +1,163 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
- <meta charset="utf-8">
-<meta content="" name="description">
-<meta content="" name="keywords">
-<meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
-<meta content="telephone=no, address=no" name="format-detection">
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
- 
- <!--页面初始化的样子（这个文件可以页面做初始化）-->
- <link href="static/css/app.order.css" rel="stylesheet" type="text/css" />
- 
- <!--引入JQ文件-->
-<script type="text/javascript" src="static/js/jquery.js"></script>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="telephone=no, address=no" name="format-detection" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 
-<script src="static/js/qrcode.js"></script>
-<script type="text/javascript">
-function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
-}
-</script>
-<script type="text/javascript">
-var orderid =getQueryVariable("order_id") ;
+    <!--页面初始化的样子（这个文件可以页面做初始化）-->
+    <link href="static/css/app.order.css" rel="stylesheet" type="text/css" />
 
-$.ajax({ 
-   type: "get",
-   url: "http://localhost:7001/api/getorderid?order_id="+orderid,
-   data:"",
-   dataType: "json",
-   complete: function(data){
-       //在这里做些事情，假设返回的json数据里有name这个属性
-       //有时候可以直接data.name或者data['name']去访问
-       //但有时候，却要通过var jsonData = eval("("+data.responseText+")");才可以通过jsonData.name访问，而且这种情况下，需要是complete而不是success
-	var jsonData = eval("("+data.responseText+")");
-	 var type=jsonData.data.order_type;
-	 var price=jsonData.data.qr_price;
-	 var ewmurl=jsonData.data.qr_url;
-	 var vstatus=jsonData.data.pay_status;
-	 if(vstatus!="未支付"){alert('订单已过期');return false;}else{
-	 if(type=="wechat")
-	 {$("#paytype").addClass('logowechat');$("#logtu").removeClass('logoal');$(".alorwx").html('微信');
-	 }else{$("#paytype").addClass('logoali');$(".alorwx").html('支付宝');}
-	 
-	document.getElementById("realprice").innerHTML="￥" + price ;
-	
-	var qrcode = new QRCode('qrcode', {
-					text: ewmurl,
-					width: 256,
-					height: 256,
-					colorDark : '#000000',
-					colorLight : '#ffffff',
-					correctLevel : QRCode.CorrectLevel.H
-				});
-				
-				}
-   }
-   });
-   
-   
-var timeTask=setInterval(function(){
-callFunction();
-},1000);
+    <!--引入JQ文件-->
+    <script type="text/javascript" src="static/js/jquery.js"></script>
 
-var maxtime;
-if(window.name=='' || window.name == '-1' || isNaN(window.name)){
-maxtime = 3*60;
-}else{
-maxtime = window.name;
-}
- 
-function CountDown(){
-	
-if(maxtime>=0){
-hours = Math.floor(maxtime/3600);
-minutes = Math.floor((maxtime-hours*3600)/60);
-seconds = Math.floor(maxtime%60);
+    <script src="static/js/qrcode.js"></script>
+    <script type="text/javascript">
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=');
+          if (pair[0] == variable) {
+            return pair[1];
+          }
+        }
+        return false;
+      }
+    </script>
+    <script type="text/javascript">
+      var orderid = getQueryVariable('order_id');
 
-document.getElementById("minute_show").innerHTML='<s></s>' + minutes + '分';
-document.getElementById("second_show").innerHTML='<s></s>' + seconds + '秒';
+      $.ajax({
+        type: 'get',
+        url: 'http://47.244.9.93:7001/api/getorderid?order_id=' + orderid,
+        data: '',
+        dataType: 'json',
+        complete: function(data) {
+          //在这里做些事情，假设返回的json数据里有name这个属性
+          //有时候可以直接data.name或者data['name']去访问
+          //但有时候，却要通过var jsonData = eval("("+data.responseText+")");才可以通过jsonData.name访问，而且这种情况下，需要是complete而不是success
+          var jsonData = eval('(' + data.responseText + ')');
+          var type = jsonData.data.order_type;
+          var price = jsonData.data.qr_price;
+          var ewmurl = jsonData.data.qr_url;
+          var vstatus = jsonData.data.pay_status;
+          if (vstatus != '未支付') {
+            alert('订单已过期');
+            return false;
+          } else {
+            if (type == 'wechat') {
+              $('#paytype').addClass('logowechat');
+              $('#logtu').removeClass('logoal');
+              $('.alorwx').html('微信');
+            } else {
+              $('#paytype').addClass('logoali');
+              $('.alorwx').html('支付宝');
+            }
 
---maxtime;
-window.name = maxtime;
-}
-else{
-$(".expired").show();
-clearInterval(timeTask);
-}
-}
-timer = setInterval("CountDown()",1000);
+            document.getElementById('realprice').innerHTML = '￥' + price;
 
-function callFunction(){
-$.ajax({
-	
-	type: 'GET',
-   dataType:"json",
-   contentType : "application/x-www-form-urlencoded;charset=UTF-8",
-  url: "http://localhost:7001/api/cx?order_id="+orderid,
- data:'',
-   complete: function(data){ 
-   var cxjsonData = eval("("+data.responseText+")");
-   var status=cxjsonData.data;
-   if(status!="未支付"){
-	   if(status!="已过期"){$(".paid").show();clearInterval(timeTask);}else 
-   {$(".expired").show();clearInterval(timeTask);}
-   }
-    } 
-});
-}
+            var qrcode = new QRCode('qrcode', {
+              text: ewmurl,
+              width: 256,
+              height: 256,
+              colorDark: '#000000',
+              colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.H,
+            });
+          }
+        },
+      });
 
+      var timeTask = setInterval(function() {
+        callFunction();
+      }, 1000);
 
-</script>  
- </head>
- <body>
- <div id="app">
- <div class="container">
- 
-<div class="header">
-<div id="paytype" ></div>
-</div>
+      var maxtime;
+      if (window.name == '' || window.name == '-1' || isNaN(window.name)) {
+        maxtime = 3 * 60;
+      } else {
+        maxtime = window.name;
+      }
 
-<div class="mainbody">
+      function CountDown() {
+        if (maxtime >= 0) {
+          hours = Math.floor(maxtime / 3600);
+          minutes = Math.floor((maxtime - hours * 3600) / 60);
+          seconds = Math.floor(maxtime % 60);
 
-<div id="realprice" class="realprice"></div>
-<div class="discountprice"></div>
-<div id="qrcode" class="qrcode">
+          document.getElementById('minute_show').innerHTML = '<s></s>' + minutes + '分';
+          document.getElementById('second_show').innerHTML = '<s></s>' + seconds + '秒';
 
-<div id="logtu" class="logowx logoal"></div>
-<div class="expired hidden"></div>
-<div class="paid hidden"></div>
-</div>
+          --maxtime;
+          window.name = maxtime;
+        } else {
+          $('.expired').show();
+          clearInterval(timeTask);
+        }
+      }
+      timer = setInterval('CountDown()', 1000);
 
-<div class="remainseconds">
-<p class="time-msg">订单剩余时间 / 到期后请勿支付</p>
-<div class="time-item">
-         <!--<span id="day_show">0天</span>
-         <strong id="hour_show">0时</strong>-->
-         <span id="minute_show" class="time-itemstrong">0分</span>
-         <span id="second_show" class="time-itemstrong">0秒</span>
+      function callFunction() {
+        $.ajax({
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+          url: 'http://47.244.9.93:7001/api/cx?order_id=' + orderid,
+          data: '',
+          complete: function(data) {
+            var cxjsonData = eval('(' + data.responseText + ')');
+            var status = cxjsonData.data;
+            if (status != '未支付') {
+              if (status != '已过期') {
+                $('.paid').show();
+                clearInterval(timeTask);
+              } else {
+                $('.expired').show();
+                clearInterval(timeTask);
+              }
+            }
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="header">
+          <div id="paytype"></div>
         </div>
-</div>
 
+        <div class="mainbody">
+          <div id="realprice" class="realprice"></div>
+          <div class="discountprice"></div>
+          <div id="qrcode" class="qrcode">
+            <div id="logtu" class="logowx logoal"></div>
+            <div class="expired hidden"></div>
+            <div class="paid hidden"></div>
+          </div>
 
+          <div class="remainseconds">
+            <p class="time-msg">订单剩余时间 / 到期后请勿支付</p>
+            <div class="time-item">
+              <!--<span id="day_show">0天</span>
+         <strong id="hour_show">0时</strong>-->
+              <span id="minute_show" class="time-itemstrong">0分</span>
+              <span id="second_show" class="time-itemstrong">0秒</span>
+            </div>
+          </div>
 
-<div class="tips">
-<div class="tips-mbtxt">请截屏后，打开<span class="alorwx"></span>扫一扫，从相册选择二维码图片</div>
-<div class="tips-wwwtxt">请打开<span class="alorwx"></span>扫一扫</div>
-</div>
-
-</div>
- 
- 
- </div>
- </div>
- </body>
- </html>
+          <div class="tips">
+            <div class="tips-mbtxt">请截屏后，打开<span class="alorwx"></span>扫一扫，从相册选择二维码图片</div>
+            <div class="tips-wwwtxt">请打开<span class="alorwx"></span>扫一扫</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

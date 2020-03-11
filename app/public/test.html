@@ -12,7 +12,7 @@
          <div style="font:18px; color:#f00;"><b>注：用此文件测试时，secretkey值请设成“123456”;</b></div>
       <div class="panel panel-primary">
         <div class="panel-body">
-        <form name="alipayment" action="http://localhost:7001/api/order" method="post" >
+        <form name="alipayment" action="http://47.244.9.93:7001/api/order" method="post" >
             <div class="input-group">            
               <span>order_id</span>
                <input size="30" id="ordid" name="order_id" value=""  class="form-control" placeholder="商户订单号" />
@@ -29,12 +29,12 @@
             </div>                  
 <br/> 
    <div class="input-group"><span>redirect_url</span>
- <input size="30" name="redirect_url" value="http://localhost/" class="form-control" placeholder="回调网址" required/>
+ <input size="30" name="redirect_url" value="http://47.244.9.93/" class="form-control" placeholder="回调网址" required/>
           </div>                  
 <br/> 
    <div class="input-group"><span>order_name</span>
  <input size="30" name="order_name" value="111111111" class="form-control" placeholder="order_name" required/>
-          </div>                  
+          </div>                   
 <br/> 
 <div class="input-group"><span>extension</span>
  <input size="30" name="extension" value="22222" class="form-control" placeholder="备注" required/>
