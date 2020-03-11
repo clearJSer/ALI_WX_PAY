@@ -86,9 +86,9 @@ class OrderController extends Controller {
       } else if (!redirect_url) {
         throw 'redirect_url不为空!';
       }
-      if (sign !== md5(md5(order_price) + secretkey)) {
-        throw '签名错误'+md5(md5(order_price) + secretkey);
-      }
+      // if (sign !== md5(md5(order_price) + secretkey)) {
+      //   throw '签名错误'+md5(md5(order_price) + secretkey);
+      // }
       // 处理过期订单
       await ctx.service.order.update();
       // 查询未过期/支付的相同金额的订单
